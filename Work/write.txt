@@ -1,0 +1,117 @@
+
+int("123")
+
+float("1.23")
+
+#字符串去除空格
+s = '  Hello '
+t = s.strip()     # 'Hello'
+
+#大小写转换
+s = 'Hello'
+l = s.lower()     # 'hello'
+u = s.upper()     # 'HELLO'
+
+#替换
+s = 'Hello world'
+t = s.replace('Hello' , 'Hallo')   # 'Hallo world'
+
+s.endswith()           # Check if string ends with suffix
+s.find()               # First occurrence of t in s
+s.index()              # First occurrence of t in s
+s.isalpha()            # Check if characters are alphabetic
+s.isdigit()            # Check if characters are numeric
+s.islower()            # Check if characters are lower-case
+s.isupper()            # Check if characters are upper-case
+s.join()               # Join a list of strings using s as delimiter
+s.lower()              # Convert to lower case
+s.replace(old,new)     # Replace text
+s.rfind(t)             # Search for t from end of string
+s.rindex(t)            # Search for t from end of string
+s.split([delim])       # Split string into list of substrings
+s.startswith()         # Check if string starts with prefix
+s.strip()              # Strip leading/trailing space
+s.upper()              # Convert to upper case
+
+
+#字符串是不可变的或只读的。一旦创建，其值就无法更改。  所有操作字符串数据的操作和方法，总是创建新字符串。
+
+# r用来转义带有未解释的反斜杠字符串
+rs = r'c:\newdata\test' # Raw (uninterpreted backslash)
+rs
+'c:\\newdata\\test'
+
+# f 转义,可以不用+ 直接用{}的形式.   >10  右对齐,s代表str d代表十进制 .2f是保留两位小数
+a = f'{name:>10s} {shares:10d} {price:10.2f}'
+
+
+
+
+
+#列表 ,使用[]
+names = [ 'Elwood', 'Jake', 'Curtis' ]
+nums = [ 39, 38, 42, 65, 111]
+
+#split()可以拆分成列表
+line = 'GOOG,100,490.10'
+row = line.split(',')
+row
+['GOOG', '100', '490.10']
+
+
+#列表操作
+
+append()
+insert()
+remove()
+del s[n]  #移除物品不会留下空位。其他物品会向下移动填补空出的空间。
+len()
+in /  not in
+s*n # s是一个列表,s是复制的次数
+index() # index返回第一个索引,如果找不到,则ValueError
+s.sort()        #就地排序     reverser = true 倒叙   也可以对字母进行排序
+s.sorted()      #再创建一个数组
+count()         #统计列表里的内容出现次数
+a = ','.join(symlist)  #将列表组合成字符串 使用,隔开
+
+
+
+1.6 文件
+
+open('文件名',rt)   #rt: read  wt:write 
+
+data = f.read()
+data = f.write("some thing")   # f的权限需要设置为wt
+f.close()
+with open(open的用法) as file:  #自动关闭file
+
+with open("foo.txt",wt) as file:
+    data = file.read()
+    #将整个文件读取为字符串
+
+with open('foo.txt',wt) as file:
+    for line in file:
+    #逐行读
+
+with open('output',wt) as out:
+    out.write("Hello World!\n")
+    #写入字符
+
+with open("output",wt) as out:
+    print("Hello World",file = out)
+    #重定向,省去了繁琐的 .write() 拼接 可以直接把这些复杂的格式化内容一口气安全地打印进文件里
+
+
+import gzip
+with gzip.open() as f:
+    #打开zip文件
+
+
+
+1.7 函数
+try - except
+
+#要引发异常，请使用该raise语句。
+raise RuntimeError('What a kerfuffle')
+
+
