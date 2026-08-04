@@ -115,3 +115,63 @@ try - except
 raise RuntimeError('What a kerfuffle')
 
 
+2.1
+元组是将多个值组合在一起的集合。
+s = ('GOOG', 100, 490.1)
+可简写为
+s = 'GOOG', 100, 490.1
+可以有str int float
+元组同数组一样，是有序的，且不可修改的，只能重写创建一个新的元组
+元组侧重于将相关项打包到另一个实体中
+name, shares, price = s
+print('Cost', shares * price)
+
+元组和列表的对比
+元组最常用于表示由多个部分组成的单个元素。列表通常是不同元素的集合，这些元素通常类型相同。
+record = ('GOOG', 100, 490.1)      
+symbols = [ 'GOOG', 'AAPL', 'IBM' ] 
+
+字典
+s ={
+    "name" : "Goog"
+    "shares" : "100"
+    "price": "500.4“
+}
+#调用时，还是[]调用，可以增添查改，和列表一样
+Keys()获取键值
+items()获取键值和value
+dict() 创建新字典
+
+集合
+my_set = {'IBM', 'AAPL', 'IBM', 'GOOG'}
+
+
+格式化
+格式化代码（位于 `<br>` 标签:内{}）与 C 语言类似printf()。常用代码包括：
+
+d       Decimal integer
+b       Binary integer
+x       Hexadecimal integer
+f       Float as [-]m.dddddd
+e       Float as [-]m.dddddde+-xx
+g       Float, but selective use of E notation
+s       String
+c       Character (from integer)
+常用修饰符用于调整字段宽度和小数精度。以下是部分列表：
+
+:>10d   Integer right aligned in 10-character field
+:<10d   Integer left aligned in 10-character field
+:^10d   Integer centered in 10-character field
+:0.2f   Float with 2 digit precision
+
+format方法：
+ '{name:>10s} {shares:10d} {price:10.2f}'.format(name='IBM', shares=100, price=91.1)
+      IBM        100      91.10'
+ '{:>10s} {:10d} {:10.2f}'.format('IBM', 100, 91.1)
+      IBM        100      91.10'
+
+
+for i,name in enumerate(names)
+    # Loops with i = 0, name = 'Elwood'
+    # i = 1, name = 'Jake'
+    # i = 2, name = 'Curtis'
