@@ -175,3 +175,211 @@ for i,name in enumerate(names)
     # Loops with i = 0, name = 'Elwood'
     # i = 1, name = 'Jake'
     # i = 2, name = 'Curtis'
+
+
+异常
+1.try-except
+    try:
+
+    except LookupError as e:
+
+    except RuntimeError as e:
+
+    except IOError as e:
+
+    except KeyboardInterrupt as e:
+    
+    except Exception: 
+
+2.raise 
+
+
+可以培养鸭子写法，使之灵活性
+深刻见解：“鸭子打字法”
+鸭子类型是一种计算机编程概念，用于判断一个对象是否可以用于特定用途。它是鸭子测试的一种应用。
+如果它看起来像鸭子，游起来像鸭子，叫起来也像鸭子，那么它很可能就是一只鸭子。
+在上述第二个版本中read_data()，该函数接受任何可迭代对象，而不仅仅是文件的行。
+
+
+getattr()
+setattr()
+delattr()
+hasattr()  #测试属性是否存在
+
+
+
+5.1字典
+python 对象系统很大程度上基于字典实现
+字典是一组已命名的集合
+
+---
+x = 42
+def bar():
+    ...
+
+def spam():
+    ...
+{
+    'x' : 42,
+    'bar' : <function bar>,
+    'spam' : <function spam>
+}
+---
+对象系统基本上就是在字典之上添加的一个额外层
+
+字典保存实例数据__dict__
+s = Stock('GOOG', 100, 490.1)
+s.__dict__
+{'name' : 'GOOG', 'shares' : 100, 'price': 490.1 }
+
+每个实例都有自己的私有字典：
+s = Stock('GOOG', 100, 490.1)     # {'name' : 'GOOG','shares' : 100, 'price': 490.1 }
+t = Stock('AAPL', 50, 123.45)     # {'name' : 'AAPL','shares' : 50, 'price': 123.45 }
+
+属性访问
+在处理对象时，您可以使用.运算符访问数据和方法。
+
+x = obj.name          # Getting
+obj.name = value      # Setting
+del obj.name          # Deleting
+这些操作与底层运行的字典直接相关。
+
+修改实例
+修改对象的操作会更新底层字典。
+s = Stock('GOOG', 100, 490.1)
+s.__dict__
+{ 'name':'GOOG', 'shares': 100, 'price': 490.1 }
+s.shares = 50       # Setting
+s.date = '6/7/2007' # Setting
+s.__dict__
+{ 'name': 'GOOG', 'shares': 50, 'price': 490.1, 'date': '6/7/2007' }
+del s.shares        # Deleting
+s.__dict__
+{ 'name': 'GOOG', 'price': 490.1, 'date': '6/7/2007' }
+
+类可以继承自其他类。
+class A(B, C):
+基类存储在每个类的元组中。
+A.__bases__
+(<class '__main__.B'>, <class '__main__.C'>)
+这提供了与父类的链接。
+读取具有继承性的属性
+从逻辑上讲，查找属性的过程如下：首先，检查本地属性__dict__。如果找不到，则检查__dict__类的子类。
+如果类的子类中也找不到，则通过基类查找 __bases__。
+
+代码重用（涉及多重继承）！！！有点理解，但是还不能写，跟查找属性关系大一些。
+Mixin模式是一个包含一段代码片段的类。
+class Loud:
+    def noise(self):
+        return super().noise().upper()
+这个类不能单独使用，它通过继承与其他类混合使用。
+
+class LoudDog(Loud, Dog):
+    pass
+
+class LoudBike(Loud, Bike):
+    pass
+响度属性现在只需实现一次，就能在两个完全不相关的类中重复使用。这种技巧是 Python 中多重继承的主要用途之一。
+
+
+5.2类和封装
+类的主要作用之一是封装对象的数据和内部实现细节。
+然而，类也定义了一个公共接口，供外部世界用来操作对象。区分实现细节和公共接口至关重要
+
+
+__slots__可以限制属性名称的集合
+class Stock:
+    __slots__ = ('name','_shares','price')
+    def __init__(self, name, shares, price):
+        self.name = name
+
+6.2 自定义迭代
+yield和return
+
+yield 和for结合，'边走变算，用时再拿'，不占用内存，可以按需使用
+def filematch(filename, substr):
+    with open(filename, 'r') as f:
+        for line in f:
+            if substr in line:
+                yield line  # 查到一行，立刻“交货”并暂停
+
+return需要一次性交付，内存爆炸，且只能干等
+def get_all_lines(filename):
+    lines = []
+    with open(filename, 'r') as f:
+        for line in f:
+            if 'IBM' in line:
+                lines.append(line)
+    return lines  # 一次性把所有的结果打包返回
+
+
+6.3生产者消费者
+https://github.com/dabeaz-course/practical-python/blob/master/Notes/06_Generators/03_Producers_consumers.md
+
+6.4更多生成器
+def filter_symbols(rows, names):
+    for row in rows:
+        if row['name'] in names:
+            yield row
+=>
+rows = (row for row in rows if row['name'] in names)
+
+
+7.高级主题
+7.1 可变参数  ：*args和**kwargs                           eg：7-1.py
+*args:接受任意数量参数的函数称为使用可变参数的函数
+def f(x, *args):
+    pass
+f(1,2,3,4,5)
+def f(x, *args):
+    # x -> 1
+    # args -> (2,3,4,5)
+eg:
+元组可以展开为可变参数。
+numbers = (2,3,4)
+f(1, *numbers)      # Same as f(1,2,3,4)
+
+**kwargs:函数可以接受任意数量的关键字参数
+def f(x, y, **kwargs):
+    ...
+f(2, 3, flag=True, mode='fast', header='debug')
+def f(x, y, **kwargs):
+    # x -> 2
+    # y -> 3
+    # kwargs -> { 'flag': True, 'mode': 'fast', 'header': 'debug' }
+eg:
+字典也可以扩展为关键字参数
+options = {
+    'color' : 'red',
+    'delimiter' : ',',
+    'width' : 400
+}
+f(data, **options)
+# Same as f(data, color='red', delimiter=',', width=400)
+
+
+7.2匿名函数和Lambda
+
+Lambda：匿名函数
+def stock_name(s):
+    return s['name']
+portfolio.sort(key=stock_name)
+# vs lambda
+portfolio.sort(key=lambda s: s['name'])
+
+7.3 返回函数
+def add(x, y):
+    def do_add():
+        print('Adding', x, y)
+        return x + y
+    return do_add
+
+>>> a = add(3,4)
+>>> a
+<function do_add at 0x6a670>
+>>> a()
+Adding 3 4
+7
+
+return会直接算出结果，如果return do_add,则调用()时才会进行计算。用在延迟中
+
