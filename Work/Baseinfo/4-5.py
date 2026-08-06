@@ -1,4 +1,4 @@
-import tableformat
+#import tableformat
 
 class TableFormatter:
     def headings(self,header):
@@ -37,7 +37,7 @@ class TableFormatter:
         #report = make_report_data(portfolio,price)
 
         #Print it out
-        formatter = tableformat.TableGormatter()
+       # formatter = tableformat.TableGormatter()
         #print_report(report,formatter)
 
 
