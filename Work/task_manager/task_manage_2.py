@@ -1,5 +1,8 @@
-#最大的问题：对象和字典混用
+import csv
+import json
+import os
 
+#最大的问题：对象和字典混用
 class Task:
     def __init__(self,id,title,status,priority,tags:list):
         self.id = id
@@ -35,18 +38,20 @@ class Task:
 class Task_manage:
     def __init__(self):
         self.task_list = []
+        self.count =1
 
     def Add_task(self,title,status = '未开始' ,priority= '低',tags =None):
         if tags ==None:
             tags = []
 
         new_task = Task(
-            id= len(self.task_list)+1,
+            id= self.count,
             title= title,
             status= status,
             priority=priority,
             tags= tags
         )
+        self.count +=1
 
         self.task_list.append(new_task)   #此时放入task_list的是一个Task对象
     
@@ -131,18 +136,65 @@ class Task_manage:
             else:
                 result[status] += 1 
         return result
+    def load_csv(self,filename = r"E:\Code\Python\Agent\Model\Python\practical-python\Work\task_manager\input.csv"):
+        
+        if not os.path.exists(filename):
+            print("目标文件夹不存在")
+            return None
+        self.task_list = []
+
+        with open(filename,'rt',encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+
+            for row in reader:
+                task = {
+                        'id': int(row['id']),  # 字符串转回整数
+                        'title': row['title'],
+                        'status': row['status'],
+                        'priority': row['priority'],
+                        'tags': json.loads(row['tags']),  # 将 JSON 字符串还原为 Python 列表
+                        }
+                self.task_list.append(row)
+
+            print(f'成功：已从 {filename} 加载 {len(self.task_list)} 条任务数据')
+            return self.task_list
+    def save_csv(self,output = r'E:\Code\Python\Agent\Model\Python\practical-python\Work\task_manager\input.csv'):
+        fieldnames = ['id', 'title', 'status', 'priority', 'tags']
+
+        with open(output,'w',encoding='utf-8',newline="") as f:
+            writer = csv.DictWriter(f,fieldnames=fieldnames)
+            writer.writeheader()
+            for task in self.task_list:
+                row = {
+                "id": task.id,
+                "title": task.title,
+                "status": task.status,
+                "priority": task.priority,
+                "tags": json.dumps(task.tags, ensure_ascii=False)
+            }
+            writer.writerow(row)
+        print(f'成功：数据已保存至 {output}')
 
 def main():
     manager = Task_manage()
 
+    print("真正加载文件.....")
+    print('请稍后.....')
+    print('='*60)
+    manager.load_csv()
     while (True):
         print("1. 添加任务")
         print("2. 查看任务")
         print("3. 修改任务")
         print("4. 删除任务")
         print("5. 查找任务")
+        print("6. 按状态筛选")
+        print("7. 按优先级排序")
+        print('8. 状态统计')
+        print("9. 保存数据")
         print("0. 退出")
-
+        print('='*50)
+        print()
         choice = input("请选择：")
 
         if choice == "1":
@@ -161,20 +213,21 @@ def main():
             函数只管修改，但是此修改的方法在，Task类里，只接受Task类的调用
             '''
             query = input("输入要修改任务的id/title：")
-            task = manager.find_task(query)
-
-            task = manager.find_by_id(int(query))
-            print("title,status,priority,tags")
-            task_key = input("输入要修改任务的主题:")
-            task_value = input("输入要修改任务的内容:")
-            if task_key == "title":
-                task.title = task_value
-            elif task_key == "status":
-                task.Updata_task_status(task_value)
-            elif task_key == "priority":
-                task.Updata_task_priority(task_value)
-            elif task_key == "tags":
-                task.Updata_task_tags(1, task_value)
+            task = manager.find_meth(query)
+            if task is None:
+                print("没有找到这个任务。")
+            else:
+                print("title,status,priority,tags")
+                task_key = input("输入要修改任务的主题:")
+                task_value = input("输入要修改任务的内容:")
+                if task_key == "title":
+                    task.title = task_value
+                elif task_key == "status":
+                    task.Updata_task_status(task_value)
+                elif task_key == "priority":
+                    task.Updata_task_priority(task_value)
+                elif task_key == "tags":
+                    task.Updata_task_tags(1, task_value)
             '''
                     不对，写到这里，我本来是要调用tasker的方法的，但是我发现除非一个一个写
                     不然是没办法调用update_task_ status/priority/tags
@@ -193,12 +246,11 @@ def main():
             中间层负责把用户输入的id或者title，转换成删除函数所需要的task。
             '''
             query = input("输入删除任务的id/title：")
-            task = manager.find_task(query)
+            task = manager.find_meth(query)
             if task is None:
                 print("没有找到这个任务。")
             else:
                 manager.Del_task(task)
-
 
         elif choice == '5':
             keyword = input("输入查找内容：")
@@ -208,6 +260,26 @@ def main():
             else:
                 for task in result:
                     print(task)
+
+        elif choice == "6":
+            status = input("输入状态：")
+            result = manager.filter_by_status(status)
+
+            for task in result:
+                print(task)
+
+        elif choice == "7":
+            result = manager.sort_by_priority()
+
+            for task in result:
+                print(task)
+
+        elif choice == "8":
+            result = manager.count_by_status()
+            print(result)
+
+        elif choice == '9':
+            manager.save_csv()
 
         elif choice == "0":
             break
